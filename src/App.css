@@ -1,0 +1,113 @@
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.app-container {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+    border: 1px solid #aaa;
+    width: 350px;
+}
+
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.8rem;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: silver;
+  letter-spacing: 1px;
+}
+
+
+.title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #cfcfcf;
+}
+
+.input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    background: #2a2a2a;
+    border: 1px solid #777;
+    border-radius: 6px;
+    color: #fff;
+    outline: none;
+}
+
+input:focus {
+    border-color: #ccc;
+}
+
+button {
+    background-color: transparent;
+    border: 1px solid silver;
+    color: silver;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background-color: silver;
+    color: #121212;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.todo-item {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-item button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.todo-item button:hover {
+    color: #ff5f5f;
+}
