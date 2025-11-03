@@ -1,8 +1,19 @@
-export default function TodoItem({ text, onDelete }) {
+export default function TodoItem({ text, completed, onToggle, onDelete }) {
     return (
-        <li className="todo-item">
+        <li 
+            className={`todo-item ${completed ? "completed" : ""}`}
+            onClick={onToggle}
+        >
             <span>{text}</span>
-            <button onClick={onDelete}>✖</button>
+            <button 
+                className="delete-btn"
+                onClick={(e) => {
+                    e.stopPropagation(); // prevent toggling when delete is clicked
+                    onDelete();
+                }}
+            >
+                ✖
+            </button>
         </li>
     );
 }
