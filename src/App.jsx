@@ -1,24 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import TodoItem from "./components/TodoItem";
 
 export default function App() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [loaded, setLoaded] = useState(false); 
+
+  // Load tasks from localStorage once
+  useEffect(() => {
+    const saved = localStorage.getItem("tasks");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) setTasks(parsed);
+      } catch (err) {
+        console.error("Error parsing saved tasks:", err);
+      }
+    }
+    setLoaded(true);
+  }, []);
+
+  // Save only after loaded
+  useEffect(() => {
+    if (loaded) {
+      console.log("Saving tasks:", tasks);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+  }, [tasks, loaded]);
 
   const addTask = () => {
-    if (task.trim() === "") return;
-    setTasks([...tasks, { text: task, completed: false }]);
+    if (!task.trim()) return;
+    const newTask = { text: task, completed: false };
+    console.log("Adding task:", newTask);
+    setTasks((prev) => [...prev, newTask]);
     setTask("");
   };
 
   const deleteTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+    setTasks((prev) => prev.filter((_, i) => i !== index));
   };
 
   const toggleTask = (index) => {
-    setTasks(
-      tasks.map((t, i) =>
+    setTasks((prev) =>
+      prev.map((t, i) =>
         i === index ? { ...t, completed: !t.completed } : t
       )
     );
