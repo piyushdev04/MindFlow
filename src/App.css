@@ -128,3 +128,18 @@ button:hover {
   gap: 10px;
   z-index: 100;
 }
+
+.clear-btn {
+    margin-top: 20px;
+    padding: 10px 16px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.clear-btn:hover {
+    background-color: #e60000;
+}

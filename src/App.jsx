@@ -49,6 +49,10 @@ export default function App() {
     );
   };
 
+  const clearCompleted = () => {
+    setTasks(tasks.filter(task => !task.completed));
+  };
+
   return (
     <>
       <header className="global-header">
@@ -80,6 +84,10 @@ export default function App() {
             />
           ))}
         </ul>
+        
+        <button className="clear-btn" onClick={clearCompleted}>
+          Clear Completed
+        </button>
       </div>
     </>
   );
