@@ -53,6 +53,9 @@ export default function App() {
     setTasks(tasks.filter(task => !task.completed));
   };
 
+  const completedCount = tasks.filter(t => t.completed).length;
+  const totalCount = tasks.length;
+
   return (
     <>
       <header className="global-header">
@@ -84,6 +87,10 @@ export default function App() {
             />
           ))}
         </ul>
+
+        <p className="task-counter">
+          {completedCount} of {totalCount} tasks completed
+        </p>
         
         <button className="clear-btn" onClick={clearCompleted}>
           Clear Completed

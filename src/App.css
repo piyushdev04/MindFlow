@@ -143,3 +143,10 @@ button:hover {
 .clear-btn:hover {
     background-color: #e60000;
 }
+
+.task-counter {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
