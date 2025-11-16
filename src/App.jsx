@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import TodoItem from "./components/TodoItem";
+import { AnimatePresence } from "framer-motion";
 
 export default function App() {
   const [task, setTask] = useState("");
@@ -77,15 +78,17 @@ export default function App() {
         </div>
 
         <ul className="task-list">
-          {tasks.map((t, i) => (
-            <TodoItem
-              key={i}
-              text={t.text}
-              completed={t.completed}
-              onToggle={() => toggleTask(i)}
-              onDelete={() => deleteTask(i)}
-            />
-          ))}
+          <AnimatePresence>
+            {tasks.map((t, i) => (
+              <TodoItem
+                key={t.text + i}
+                text={t.text}
+                completed={t.completed}
+                onToggle={() => toggleTask(i)}
+                onDelete={() => deleteTask(i)}
+              />
+            ))}
+          </AnimatePresence>  
         </ul>
 
         <p className="task-counter">
