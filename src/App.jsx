@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import TodoItem from "./components/TodoItem";
 import { AnimatePresence } from "framer-motion";
+import { AiOutlinePlus } from "react-icons/ai"
 
 export default function App() {
   const [task, setTask] = useState("");
@@ -74,7 +75,9 @@ export default function App() {
             value={task}
             onChange={(e) => setTask(e.target.value)}
           />
-          <button onClick={addTask}>Add</button>
+          <button className="icon-btn" onClick={addTask}>
+            <AiOutlinePlus size={20} />
+          </button>
         </div>
 
         <ul className="task-list">

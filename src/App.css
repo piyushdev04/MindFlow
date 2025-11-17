@@ -150,3 +150,46 @@ button:hover {
     color: #555;
     text-align: center;
 }
+
+.icon-btn {
+    background: #2f2f2f;
+    border: 1px solid #444;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: #3a3a3a;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #666;
+}
+
+.check-icon {
+    color: #6ee7b7;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.delete-btn:hover {
+    color: #ff6b6b;
+}

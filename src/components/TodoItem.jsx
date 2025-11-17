@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { AiOutlineDelete, AiOutlineCheck } from "react-icons/ai";
 
 export default function TodoItem({ text, completed, onToggle, onDelete }) {
     return (
@@ -10,7 +11,14 @@ export default function TodoItem({ text, completed, onToggle, onDelete }) {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.3 }}
         >
-            <span>{text}</span>
+            <div className="left-section">
+                {completed ? (
+                    <AiOutlineCheck className="check-icon" size={20} />
+                ) : (
+                    <div className="circle"></div>
+                )}
+                <span>{text}</span>
+            </div>
             <button 
                 className="delete-btn"
                 onClick={(e) => {
@@ -18,7 +26,7 @@ export default function TodoItem({ text, completed, onToggle, onDelete }) {
                     onDelete();
                 }}
             >
-                ✖
+                <AiOutlineDelete size={20}/>
             </button>
         </motion.li>
     );
