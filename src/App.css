@@ -193,3 +193,16 @@ button:hover {
 .delete-btn:hover {
     color: #ff6b6b;
 }
+
+.task-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 10px;
+}
+
+.task-list::-webkit-scrollbar-track {
+    background: transparent;
+}
