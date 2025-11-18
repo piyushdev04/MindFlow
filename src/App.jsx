@@ -58,50 +58,52 @@ export default function App() {
   const completedCount = tasks.filter(t => t.completed).length;
   const totalCount = tasks.length;
 
-  return (
-    <>
-      <header className="global-header">
-        <img src="/logo.svg" alt="MindFlow Logo" className="logo" />
-        <span className="brand-name">MindFlow</span>
-      </header>
+return (
+  <div className="min-h-screen flex flex-col items-center py-10">
+    
+    <header className="global-header">
+      <img src="/logo.svg" alt="MindFlow Logo" className="logo" />
+      <span className="brand-name">MindFlow</span>
+    </header>
 
-      <div className="app-container">
-        <h1 className="title">To-Do App</h1>
-
-        <div className="input-section">
-          <input
-            type="text"
-            placeholder="Add a new task..."
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-          />
-          <button className="icon-btn" onClick={addTask}>
-            <AiOutlinePlus size={20} />
-          </button>
-        </div>
-
-        <ul className="task-list">
-          <AnimatePresence>
-            {tasks.map((t, i) => (
-              <TodoItem
-                key={t.text + i}
-                text={t.text}
-                completed={t.completed}
-                onToggle={() => toggleTask(i)}
-                onDelete={() => deleteTask(i)}
-              />
-            ))}
-          </AnimatePresence>  
-        </ul>
-
-        <p className="task-counter">
-          {completedCount} of {totalCount} tasks completed
-        </p>
-        
-        <button className="clear-btn" onClick={clearCompleted}>
-          Clear Completed
+    <div className="app-container">
+      <h1 className="title">To-Do App</h1>
+    
+      <div className="input-section">
+        <input
+          type="text"
+          placeholder="Add a new task..."
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+        />
+        <button className="icon-btn" onClick={addTask}>
+          <AiOutlinePlus size={20} />
         </button>
       </div>
-    </>
-  );
+
+      <ul className="task-list max-h-[300px] overflow-y-auto pr-2">
+        <AnimatePresence>
+          {tasks.map((t, i) => (
+            <TodoItem
+              key={t.text + i}
+              text={t.text}
+              completed={t.completed}
+              onToggle={() => toggleTask(i)}
+              onDelete={() => deleteTask(i)}
+            />
+          ))}
+        </AnimatePresence>
+      </ul>
+
+      <p className="task-counter">
+        {completedCount} of {totalCount} tasks completed
+      </p>
+
+      <button className="clear-btn" onClick={clearCompleted}>
+        Clear Completed
+      </button>
+    </div>
+
+  </div>
+);
 }
