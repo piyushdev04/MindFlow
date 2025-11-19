@@ -58,6 +58,29 @@ export default function App() {
   const completedCount = tasks.filter(t => t.completed).length;
   const totalCount = tasks.length;
 
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editText, setEditText] = useState("");
+  
+  const startEdit = (index, text) => {
+    setEditingIndex(index);
+    setEditText(text);
+  };
+
+  const saveEdit = () => {
+    if (!editText.trim()) return;
+    setTasks(prev =>
+      prev.map((t, i) => 
+        i === editingIndex ? { ...t, text: editText } : t
+      )
+    );
+    setEditingIndex(null);
+  };
+
+  const cancelEdit = () => {
+    setEditingIndex(null);
+    setEditText("");
+  };
+
 return (
   <div className="min-h-screen flex flex-col items-center py-10">
     
@@ -90,6 +113,12 @@ return (
               completed={t.completed}
               onToggle={() => toggleTask(i)}
               onDelete={() => deleteTask(i)}
+              onEdit={() => startEdit(i, t.text)}
+              editing={editingIndex === i}
+              editText={editText}
+              setEditText={setEditText}
+              saveEdit={saveEdit}
+              cancelEdit={cancelEdit}
             />
           ))}
         </AnimatePresence>
