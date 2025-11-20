@@ -39,9 +39,9 @@ export default function TodoItem({
                     onClick={onToggle}
                 >
                     {completed ? (
-                        <AiOutlineCheck className="text-green-500" size={18} />
+                        <AiOutlineCheck className="text-green-500 hover:text-green-400 transition-colors duration-200" size={18} />
                     ) : (
-                        <div className="w-4 h-4 rounded-full border flex-shrink-0"></div>
+                        <div className="w-4 h-4 rounded-full border border-gray-500 hover:border-green-400 transition-colors duration-200 flex-shrink-0"></div>
                     )}
 
                     <span
@@ -57,17 +57,21 @@ export default function TodoItem({
             <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                 {editing ? (
                     <>
-                        <button
+                        <button 
                             onClick={saveEdit}
-                            className="text-green-600 hover:opacity-70 text-sm"
+                            className="transition-colors duration-200"
                         >
-                            ✓
+                            <span className="text-green-600 hover:text-green-400 text-sm">
+                                ✓
+                            </span>
                         </button>
                         <button
                             onClick={cancelEdit}
-                            className="text-red-500 hover:opacity-70 text-sm"
+                            className="transition-colors duration-200"
                         >
-                            ✕
+                            <span className="text-red-500 hover:text-red-400 text-sm">
+                                ✕
+                            </span>
                         </button>
                     </>
                 ) : (
@@ -77,10 +81,10 @@ export default function TodoItem({
                                 e.stopPropagation();
                                 onEdit();
                             }}
-                            className="text-gray-500 hover:text-blue-500 transition-colors"
+                            className="transition-colors duration-200"
 
                         >
-                            <LuPen size={16} />
+                            <LuPen className="text-gray-500 hover:text-blue-500" size={16} />
                         </button>
 
                         <button
@@ -88,9 +92,9 @@ export default function TodoItem({
                                 e.stopPropagation();
                                 onDelete();
                             }}
-                            className="text-gray-500 hover:text-red-500"
+                            className="transition-colors duration-200"
                         >
-                            <AiOutlineDelete size={18} />
+                            <AiOutlineDelete className="text-gray-500 hover:text-red-500" size={18} />
                         </button>
                     </>
                 )}

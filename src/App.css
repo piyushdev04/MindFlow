@@ -1,3 +1,4 @@
+@import "tailwindcss";
 body {
     background-color: #121212;
     color: #e0e0e0;
@@ -103,14 +104,9 @@ button:hover {
 .todo-item button {
     background: transparent;
     border: none;
-    color: #aaa;
-    font-size: 16px;
     cursor: pointer;
+    font-size: 16px;
     transition: 0.2s ease;
-}
-
-.todo-item button:hover {
-    color: #ff5f5f;
 }
 
 .todo-item.completed span {
