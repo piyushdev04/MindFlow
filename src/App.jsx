@@ -82,14 +82,14 @@ export default function App() {
   };
 
 return (
-  <div className="min-h-screen flex flex-col items-center py-10">
+  <div className="min-h-screen w-full bg-[#000000] flex flex-col">
     
     <header className="global-header">
       <img src="/logo.svg" alt="MindFlow Logo" className="logo" />
       <span className="brand-name">MindFlow</span>
     </header>
 
-    <div className="app-container">
+    <div className="app-container w-full max-w-3xl mx-auto px-6 mt-10">
       <h1 className="title">To-Do App</h1>
     
       <div className="input-section">
