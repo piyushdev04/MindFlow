@@ -90,7 +90,7 @@ return (
     </header>
 
     <div className="app-container w-full max-w-3xl mx-auto px-6 mt-10">
-      <h1 className="title">To-Do App</h1>
+      <h1 className="title">do it now!</h1>
     
       <div className="input-section">
         <input
