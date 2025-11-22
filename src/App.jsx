@@ -81,9 +81,19 @@ export default function App() {
     setEditText("");
   };
 
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle("light");
+    document.documentElement.classList.toggle("dark");
+  };
+
 return (
-  <div className="min-h-screen w-full bg-[#000000] flex flex-col">
+  <div className="min-h-screen w-full flex flex-col">
     
+    <button
+      onClick={toggleTheme}
+      className="theme-toggle appearance-none fixed top-6 right-6 w-6 h-6 p-0 rounded-full border border-gray-400 hover:border-[#0099ff] bg-transparent transition"
+    ></button>
+
     <header className="global-header">
       <img src="/logo.svg" alt="MindFlow Logo" className="logo" />
       <span className="brand-name">MindFlow</span>
