@@ -336,3 +336,42 @@ button:hover {
 .light .delete-btn:hover {
   color: #ff4d4d;
 }
+
+.filter-tabs {
+  margin-bottom: 10px;
+}
+
+.tab-btn {
+  padding: 6px 14px;
+  border: 1px solid #333;
+  background-color: transparent !important;
+  color: inherit !important;
+  color: silver;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.tab-btn:hover {
+  border-color: #0099ff;
+}
+
+.tab-btn.active {
+  border-color: #0099ff;
+  color: #0099ff;
+}
+
+.light .tab-btn {
+  border: 1px solid #ccc;
+  color: #444;
+}
+
+.light .tab-btn:hover {
+  border-color: #0099ff;
+}
+
+.light .tab-btn.active {
+  border-color: #0099ff;
+  color: #0099ff;
+}

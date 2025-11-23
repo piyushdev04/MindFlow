@@ -86,6 +86,16 @@ export default function App() {
     document.documentElement.classList.toggle("dark");
   };
 
+  const [filter, setFilter] = useState("all");
+
+  const filteredTasks = tasks
+    .map((t, originalIndex) => ({ ...t, originalIndex }))
+    .filter(t => {
+        if (filter === "all") return true;
+        if (filter === "active") return !t.completed;
+        if (filter === "completed") return t.completed;
+  });
+
 return (
   <div className="min-h-screen w-full flex flex-col">
     
@@ -101,6 +111,29 @@ return (
 
     <div className="app-container w-full max-w-3xl mx-auto px-6 mt-10">
       <h1 className="title">do it now!</h1>
+
+      <div className="filter-tabs flex gap-4 justify-center my-4">
+        <button
+          className={`tab-btn ${filter === "all" ? "active" : ""}`}
+          onClick={() => setFilter("all")}
+        >
+          🔴 All
+        </button>
+
+        <button
+          className={`tab-btn ${filter === "active" ? "active" :  ""}`}
+          onClick={() => setFilter("active")}
+        >
+          🟡 Active
+        </button>
+
+        <button
+          className={`tab-btn ${filter === "completed" ? "active" : ""}`}
+          onClick={() => setFilter("completed")}
+        >
+          🟢 Completed
+        </button>
+      </div>
     
       <div className="input-section">
         <input
@@ -116,15 +149,15 @@ return (
 
       <ul className="task-list max-h-[300px] overflow-y-auto pr-2">
         <AnimatePresence>
-          {tasks.map((t, i) => (
+          {filteredTasks.map((t) => (
             <TodoItem
-              key={t.text + i}
+              key={t.originalIndex}
               text={t.text}
               completed={t.completed}
-              onToggle={() => toggleTask(i)}
-              onDelete={() => deleteTask(i)}
-              onEdit={() => startEdit(i, t.text)}
-              editing={editingIndex === i}
+              onToggle={() => toggleTask(t.originalIndex)}
+              onDelete={() => deleteTask(t.originalIndex)}
+              onEdit={() => startEdit(t.originalIndex, t.text)}
+              editing={editingIndex === t.originalIndex}
               editText={editText}
               setEditText={setEditText}
               saveEdit={saveEdit}
