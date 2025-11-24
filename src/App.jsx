@@ -4,18 +4,41 @@ import TodoItem from "./components/TodoItem";
 import { AnimatePresence } from "framer-motion";
 import { AiOutlinePlus } from "react-icons/ai"
 
+import { 
+  DndContext, 
+  closestCenter, 
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from "@dnd-kit/core";
+import { 
+  SortableContext, 
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+
+const generateId = () => Date.now().toString(36) + Math.random().toString(36).substring(2);
+
 export default function App() {
   const [task, setTask] = useState("");
+  
   const [tasks, setTasks] = useState([]);
   const [loaded, setLoaded] = useState(false); 
+  
+  const [activeId, setActiveId] = useState(null); 
 
-  // Load tasks from localStorage once
   useEffect(() => {
     const saved = localStorage.getItem("tasks");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) setTasks(parsed);
+        if (Array.isArray(parsed)) {
+            const tasksWithIds = parsed.map(t => t.id ? t : ({...t, id: generateId()}));
+            setTasks(tasksWithIds);
+        }
       } catch (err) {
         console.error("Error parsing saved tasks:", err);
       }
@@ -23,7 +46,6 @@ export default function App() {
     setLoaded(true);
   }, []);
 
-  // Save only after loaded
   useEffect(() => {
     if (loaded) {
       console.log("Saving tasks:", tasks);
@@ -33,20 +55,19 @@ export default function App() {
 
   const addTask = () => {
     if (!task.trim()) return;
-    const newTask = { text: task, completed: false };
-    console.log("Adding task:", newTask);
+    const newTask = { id: generateId(), text: task, completed: false };
     setTasks((prev) => [...prev, newTask]);
     setTask("");
   };
 
-  const deleteTask = (index) => {
-    setTasks((prev) => prev.filter((_, i) => i !== index));
+  const deleteTask = (id) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const toggleTask = (index) => {
+  const toggleTask = (id) => {
     setTasks((prev) =>
-      prev.map((t, i) =>
-        i === index ? { ...t, completed: !t.completed } : t
+      prev.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed } : t
       )
     );
   };
@@ -58,26 +79,26 @@ export default function App() {
   const completedCount = tasks.filter(t => t.completed).length;
   const totalCount = tasks.length;
 
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   
-  const startEdit = (index, text) => {
-    setEditingIndex(index);
+  const startEdit = (id, text) => {
+    setEditingId(id);
     setEditText(text);
   };
 
   const saveEdit = () => {
     if (!editText.trim()) return;
     setTasks(prev =>
-      prev.map((t, i) => 
-        i === editingIndex ? { ...t, text: editText } : t
+      prev.map((t) => 
+        t.id === editingId ? { ...t, text: editText } : t
       )
     );
-    setEditingIndex(null);
+    setEditingId(null);
   };
 
   const cancelEdit = () => {
-    setEditingIndex(null);
+    setEditingId(null);
     setEditText("");
   };
 
@@ -89,12 +110,41 @@ export default function App() {
   const [filter, setFilter] = useState("all");
 
   const filteredTasks = tasks
-    .map((t, originalIndex) => ({ ...t, originalIndex }))
     .filter(t => {
         if (filter === "all") return true;
         if (filter === "active") return !t.completed;
         if (filter === "completed") return t.completed;
-  });
+        return true;
+    });
+
+  const filteredTaskIds = filteredTasks.map(t => t.id);
+  
+  const activeTask = tasks.find(t => t.id === activeId);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function handleDragStart(event) {
+    setActiveId(event.active.id);
+  }
+
+  function handleDragEnd(event) {
+    const {active, over} = event;
+
+    if (active.id !== over.id) {
+      setTasks((tasks) => {
+        const oldIndex = tasks.findIndex(t => t.id === active.id);
+        const newIndex = tasks.findIndex(t => t.id === over.id);
+        return arrayMove(tasks, oldIndex, newIndex);
+      });
+    }
+    setActiveId(null);
+  }
+
 
 return (
   <div className="min-h-screen w-full flex flex-col">
@@ -121,7 +171,7 @@ return (
         </button>
 
         <button
-          className={`tab-btn ${filter === "active" ? "active" :  ""}`}
+          className={`tab-btn ${filter === "active" ? "active" : ""}`}
           onClick={() => setFilter("active")}
         >
           🟡 Active
@@ -141,6 +191,9 @@ return (
           placeholder="Add a new task..."
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") addTask();
+          }}
         />
         <button className="icon-btn" onClick={addTask}>
           <AiOutlinePlus size={20} />
@@ -148,23 +201,56 @@ return (
       </div>
 
       <ul className="task-list max-h-[300px] overflow-y-auto pr-2">
-        <AnimatePresence>
-          {filteredTasks.map((t) => (
-            <TodoItem
-              key={t.originalIndex}
-              text={t.text}
-              completed={t.completed}
-              onToggle={() => toggleTask(t.originalIndex)}
-              onDelete={() => deleteTask(t.originalIndex)}
-              onEdit={() => startEdit(t.originalIndex, t.text)}
-              editing={editingIndex === t.originalIndex}
-              editText={editText}
-              setEditText={setEditText}
-              saveEdit={saveEdit}
-              cancelEdit={cancelEdit}
+        
+        <DndContext 
+            sensors={sensors}
+            collisionDetection={closestCenter} 
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
+          <SortableContext 
+              items={filteredTaskIds} 
+              strategy={verticalListSortingStrategy}
+          >
+            <AnimatePresence>
+              {filteredTasks.map((t) => (
+                <TodoItem
+                  key={t.id} 
+                  id={t.id} 
+                  text={t.text}
+                  completed={t.completed}
+                  onToggle={() => toggleTask(t.id)}
+                  onDelete={() => deleteTask(t.id)}
+                  onEdit={() => startEdit(t.id, t.text)}
+                  editing={editingId === t.id}
+                  editText={editText}
+                  setEditText={setEditText}
+                  saveEdit={saveEdit}
+                  cancelEdit={cancelEdit}
+                />
+              ))}
+            </AnimatePresence>
+          </SortableContext>
+        
+        <DragOverlay>
+        {activeTask ? (
+            <TodoItem 
+                id={activeTask.id}
+                text={activeTask.text}
+                completed={activeTask.completed}
+                style={{ 
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    transform: 'rotate(0.5deg)',
+                    opacity: 0.95,
+                    backgroundColor: document.documentElement.classList.contains("light") ? '#ffffff' : '#101010',
+                    color: document.documentElement.classList.contains("light") ? '#333' : '#e0e0e0',
+                    border: '1px solid ' + (document.documentElement.classList.contains("light") ? '#e5e5e5' : '#222222')
+                }}
             />
-          ))}
-        </AnimatePresence>
+        ) : null}
+    </DragOverlay>
+
+      </DndContext>
       </ul>
 
       <p className="task-counter">

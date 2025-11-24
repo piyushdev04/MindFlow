@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import { AiOutlineDelete, AiOutlineCheck } from "react-icons/ai";
 import { LuPen } from "react-icons/lu";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { RxDragHandleDots2 } from "react-icons/rx"; 
 
 export default function TodoItem({
+    id,
     text,
     completed,
     onToggle,
@@ -13,15 +17,49 @@ export default function TodoItem({
     setEditText,
     saveEdit,
     cancelEdit,
+    style: externalStyle,
 }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: id }); 
+
+    const dndStyle = {
+        transition,
+        transform: CSS.Transform.toString(transform),
+        zIndex: isDragging ? 10 : 1,
+        opacity: isDragging ? 0.6 : 1,
+    };
+    
+    const combinedStyle = {...dndStyle, ...externalStyle};
+
+
     return (
         <motion.li
+
+            ref={setNodeRef}
+            style={combinedStyle}
+            {...attributes} 
             className="todo-item flex items-center justify-between py-2 w-full"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
         >
+            {!editing && (
+                <button 
+                    {...listeners} 
+                    className="p-1 mr-2 text-gray-400 hover:text-white transition **cursor-grab** flex-shrink-0"
+                    aria-label="Drag task to reorder"
+                >
+                    <RxDragHandleDots2 size={18} />
+                </button>
+            )}
+
             {editing ? (
                 <input
                     className="border rounded px-2 py-1 text-sm flex-1 mr-3 min-w-0"
@@ -57,21 +95,11 @@ export default function TodoItem({
             <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                 {editing ? (
                     <>
-                        <button 
-                            onClick={saveEdit}
-                            className="transition-colors duration-200"
-                        >
-                            <span className="text-green-600 hover:text-green-400 text-sm">
-                                ✓
-                            </span>
+                        <button onClick={saveEdit} className="transition-colors duration-200">
+                            <span className="text-green-600 hover:text-green-400 text-sm">✓</span>
                         </button>
-                        <button
-                            onClick={cancelEdit}
-                            className="transition-colors duration-200"
-                        >
-                            <span className="text-red-500 hover:text-red-400 text-sm">
-                                ✕
-                            </span>
+                        <button onClick={cancelEdit} className="transition-colors duration-200">
+                            <span className="text-red-500 hover:text-red-400 text-sm">✕</span>
                         </button>
                     </>
                 ) : (
@@ -82,7 +110,6 @@ export default function TodoItem({
                                 onEdit();
                             }}
                             className="transition-colors duration-200"
-
                         >
                             <LuPen className="text-gray-500 hover:text-blue-500" size={16} />
                         </button>
