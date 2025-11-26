@@ -138,6 +138,9 @@ return (
           placeholder="Add a new task..."
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") addTask();
+          }}
         />
 
         <button className="icon-btn" onClick={addTask}>
